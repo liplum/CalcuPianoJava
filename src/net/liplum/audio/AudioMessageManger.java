@@ -1,24 +1,16 @@
 package net.liplum.audio;
 
-import net.liplum.audio.AudioMessage.AUDIOMESSAGE;
-import net.liplum.main.Resources;
-import net.liplum.main.Resources.AudioList;
-import net.liplum.music.MusicBase;
+import net.liplum.audio.AudioMessage.AudioMsg;
+import net.liplum.Resources;
+import net.liplum.Resources.AudioList;
+import net.liplum.music.IMusic;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class AudioMessageManger implements Runnable {
+public class AudioMessageManger {
 
     private static final BlockingQueue<AudioMessage> messageQueue = new LinkedBlockingQueue<>();
-
-    private static AudioMessageManger audioMessageManger;
-
-    public static AudioMessageManger Instance() {
-        if (audioMessageManger == null)
-            audioMessageManger = new AudioMessageManger();
-        return audioMessageManger;
-    }
 
     public static void sendMessage(AudioMessage message) {
         try {
@@ -29,7 +21,7 @@ public class AudioMessageManger implements Runnable {
     }
 
     private static void playAudio(AudioList index) {
-        MusicBase m = Resources.getAudioAt(index);
+        IMusic m = Resources.getAudioAt(index);
         m.clone().play();
     }
 
@@ -41,23 +33,23 @@ public class AudioMessageManger implements Runnable {
         Resources.getAudioAt(index).clone().stop();
     }
 
-    @Override
-    public void run() {
+    public static void run() {
         AudioMessage msg;
         while (true) {
             try {
+                if (messageQueue.isEmpty()) continue;
                 msg = messageQueue.take();
-                AUDIOMESSAGE AudioMsg = msg.getMessage();
+                AudioMsg AudioMsg = msg.message;
 
                 switch (AudioMsg) {
                     case LOOP:
-                        loopAudio(msg.getIndex());
+                        loopAudio(msg.index);
                         break;
                     case PLAY:
-                        playAudio(msg.getIndex());
+                        playAudio(msg.index);
                         break;
                     case STOP:
-                        stopAudio(msg.getIndex());
+                        stopAudio(msg.index);
                         break;
                 }
             } catch (InterruptedException e) {

@@ -1,0 +1,67 @@
+plugins {
+    id 'java'
+}
+allprojects {
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+sourceSets.test.java.srcDirs = ["test"]
+sourceSets.main.java.srcDirs = ["src"]
+group 'net.liplum'
+version '0.1'
+apply plugin: "java"
+
+dependencies {
+    implementation 'org.jetbrains:annotations:23.0.0'
+    implementation 'org.javatuples:javatuples:1.2'
+    implementation 'com.github.liplum:PlumStarEngine:v0.1'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+}
+
+jar {
+    //noinspection GroovyAssignabilityCheck
+    manifest {
+        attributes 'Main-Class': 'net.liplum.main.Main'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from sourceSets.main.allSource
+    from('assets/') {
+        include '**'
+    }
+}
+
+test {
+    useJUnitPlatform {
+        includeTags 'fast'
+        excludeTags 'slow'
+    }
+}
+
+task copyAssets(dependsOn:classes,type: Copy){
+    from 'assets'
+    into "build/classes/java/main"
+    include '**'
+}
+
+sourceSets {
+    main {
+        output.resourcesDir = "build/classes/main"
+    }
+    test {
+        output.resourcesDir = "build/classes/test"
+    }
+}
+
+task runGame(dependsOn:classes,type:JavaExec){
+    dependsOn copyAssets
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'net.liplum.Main'
+}

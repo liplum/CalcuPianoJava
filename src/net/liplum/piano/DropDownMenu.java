@@ -1,27 +1,27 @@
 package net.liplum.piano;
 
 import net.liplum.animation.Animation;
-import net.liplum.attribute.KeyListener;
-import net.liplum.attribute.MouseListener;
-import net.liplum.attribute.IRender;
-import net.liplum.attribute.IUpdate;
+import net.liplum.controls.Button;
+import net.liplum.controls.ButtonGroup;
+import net.liplum.controls.IControl;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-public final class DropDownMenu extends PianoKey implements IRender, IUpdate, KeyListener, MouseListener {
+public final class DropDownMenu extends Button implements IControl {
 
-    private PianoKeyGroup<PianoKey> pullOut;// 默认为不可见
+    private final ButtonGroup<Button> pullOut;// 默认为不可见
 
-    private volatile boolean isPullOut = false;
+    private boolean isPullOut = false;
 
-    public DropDownMenu(int keyCode, Animation pressedAnimation, int x, int y, int width, int height, boolean isVisible,
-                        int dx, int dy, CanExecuteTask[] canExecuteTasks, Color colorUp, BufferedImage[] pasters, int optionWidth,
+    public DropDownMenu(int hotkey, Animation pressedAnimation, int x, int y, int width, int height, boolean isVisible,
+                        int dx, int dy, IExecuteTask[] canExecuteTasks, Color colorUp, BufferedImage[] pasters, int optionWidth,
                         int optionHeight, int distance) {
 
-        super(keyCode, pressedAnimation, x, y, width, height, isVisible);
+        super(pressedAnimation, x, y, width, height);
+        setHotkeyCode(hotkey);
         setTask(this::switchPullOut);
 
         pullOut = PianoKeyFactory.newNeatPianoKeyGroup(getX() + dx, getY() + dy + height + distance, optionWidth,
@@ -30,48 +30,40 @@ public final class DropDownMenu extends PianoKey implements IRender, IUpdate, Ke
 
     }
 
-////////////////////////////////////////////////////////////////////////
-//	须实现的内容
-
     @Override
-    public synchronized void update(long delta) {
+    public void update(long delta) {
         super.update(delta);
         pullOut.update(delta);
 
     }
 
     @Override
-    public synchronized void render(Graphics g) {
+    public void render(Graphics g) {
         super.render(g);
         pullOut.render(g);
 
     }
 
     @Override
-    public synchronized void mouseClicked(MouseEvent e) {
+    public void mouseClicked(MouseEvent e) {
         super.mouseClicked(e);
         pullOut.mouseClicked(e);
 //		checkClickedOutSide(e);
-
     }
 
     @Override
-    public synchronized void keyPressed(KeyEvent e) {
+    public void keyPressed(KeyEvent e) {
         super.keyPressed(e);
 
     }
 
-////////////////////////////////////////////////////////////////////////
-//内部调用
-
-//	
-//	private synchronized void checkClickedOutSide(MouseEvent e) {
-//		if(isVisible()) {
-//			if(!getRect().contains(e.getX(), e.getY()))
-//				if(isPullOut)
-//					switchPullOut();
-//		}
-//	}
+/*	private void checkClickedOutSide(MouseEvent e) {
+		if(isVisible()) {
+			if(!getRect().contains(e.getX(), e.getY()))
+				if(isPullOut)
+					switchPullOut();
+		}
+	}*/
 
     public void switchPullOut() {
         isPullOut = !isPullOut;
@@ -82,8 +74,4 @@ public final class DropDownMenu extends PianoKey implements IRender, IUpdate, Ke
             pullOut.setAllInVisible();
         }
     }
-
-//	内部调用结束
-////////////////////////////////////////////////////////////////////////
-
 }

@@ -1,19 +1,18 @@
 package net.liplum.piano;
 
-import net.liplum.animation.GradualAnimationFactory;
-import net.liplum.attribute.KeyListener;
-import net.liplum.attribute.MouseListener;
-import net.liplum.attribute.IRender;
-import net.liplum.attribute.IUpdate;
+import net.liplum.animation.GradualAnimeFactory;
+import net.liplum.controls.Button;
+import net.liplum.controls.ButtonGroup;
+import net.liplum.controls.IControl;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-public class Piano implements IUpdate, IRender, KeyListener, MouseListener {
+public class Piano implements IControl {
 
-    private PianoKeyGroup<PianoKey> pianoKeys;
+    private ButtonGroup<Button> pianoKeys;
 
     private DropDownMenu menu;
 
@@ -34,7 +33,7 @@ public class Piano implements IUpdate, IRender, KeyListener, MouseListener {
         int moreKeyX = upperSidebarWidth - f.width;
 
         menu = new DropDownMenu(f2.launcherKeyCode,
-                GradualAnimationFactory.newGradualAnimation(4, f2.x, f2.y, f.width, upperSidebarHeight, f2.colorUp,
+                GradualAnimeFactory.newAnime(4, f2.x, f2.y, f.width, upperSidebarHeight, f2.colorUp,
                         f2.launcher, 0, 0, f.width, upperSidebarHeight),
                 moreKeyX, 0, f.width, upperSidebarHeight, true, 0, 0, f2.CanExecuteTasks, f2.colorUp, f2.pasters,
                 f2.optionWidth, f2.optionHeight, f2.distance);
@@ -76,11 +75,11 @@ public class Piano implements IUpdate, IRender, KeyListener, MouseListener {
         private int leftUpX, leftUpY, width, height, standoffDistance;
         private Color colorUp;
         private BufferedImage[] pasters;
-        private CanExecuteTask[] CanExecuteTasks;
+        private IExecuteTask[] CanExecuteTasks;
         private int[] triggerKeyCodes;
 
         public PianoKeyField(int leftUpX, int leftUpY, int width, int height, int standoffDistance, Color colorUp,
-                             BufferedImage[] pasters, CanExecuteTask[] canExecuteTasks, int[] triggerKeyCodes) {
+                             BufferedImage[] pasters, IExecuteTask[] canExecuteTasks, int[] triggerKeyCodes) {
 
             this.leftUpX = leftUpX;
             this.leftUpY = leftUpY;
@@ -97,14 +96,21 @@ public class Piano implements IUpdate, IRender, KeyListener, MouseListener {
     public static class DropDownMenuField {
         private BufferedImage launcher;
         private BufferedImage[] pasters;
-        private CanExecuteTask[] CanExecuteTasks;
+        private IExecuteTask[] CanExecuteTasks;
         private int launcherKeyCode;
         private int x, y, distance;
         private int optionWidth, optionHeight;
         private Color colorUp;
 
-        public DropDownMenuField(BufferedImage launcher, BufferedImage[] pasters, CanExecuteTask[] canExecuteTasks,
-                                 int launcherKeyCode, int x, int y, int distance, int optionWidth, int optionHeight, Color colorUp) {
+        public DropDownMenuField(
+                BufferedImage launcher,
+                BufferedImage[] pasters,
+                IExecuteTask[] canExecuteTasks,
+                int launcherKeyCode,
+                int x, int y, int distance,
+                int optionWidth, int optionHeight,
+                Color colorUp
+        ) {
 
             this.launcher = launcher;
             this.pasters = pasters;

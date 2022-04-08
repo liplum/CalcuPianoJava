@@ -16,12 +16,11 @@ public class FileChooser {
     }
 
     public void chooseFile() {
-        int i = jFileChooser.showOpenDialog(container);// 显示文件选择对话框
+        int i = jFileChooser.showOpenDialog(container);// Show dialog for selecting file
 
-        // 判断用户单击的是否为“打开”按钮
+        // Check whether the clicked is "open"
         if (i == JFileChooser.APPROVE_OPTION) {
-
-            File selectedFile = jFileChooser.getSelectedFile();// 获得选中的文件对象
+            File selectedFile = jFileChooser.getSelectedFile();
         }
     }
 

@@ -1,4 +1,4 @@
-package net.liplum.main;
+package net.liplum;
 
 import net.liplum.state.GUIStateMachine;
 

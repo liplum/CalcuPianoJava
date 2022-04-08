@@ -1,29 +1,31 @@
 package net.liplum.piano;
 
 import net.liplum.audio.AudioMessage;
-import net.liplum.audio.AudioMessage.AUDIOMESSAGE;
+import net.liplum.audio.AudioMessage.AudioMsg;
 import net.liplum.audio.AudioMessageManger;
-import net.liplum.main.Resources.AudioList;
+import net.liplum.Resources.AudioList;
 
 public class AllPianoKeysTask {
 
-    private static CanExecuteTask GenPianoKeyPlaySoundTask(AudioList item) {
-        return () -> AudioMessageManger.sendMessage(new AudioMessage(AUDIOMESSAGE.PLAY, item));
+    private static IExecuteTask genTask(AudioList item) {
+        return () -> AudioMessageManger.sendMessage(new AudioMessage(AudioMsg.PLAY, item));
     }
 
-    public static CanExecuteTask Number1 = GenPianoKeyPlaySoundTask(AudioList.NUM1);
-    public static CanExecuteTask Number2 = GenPianoKeyPlaySoundTask(AudioList.NUM2);
-    public static CanExecuteTask Number3 = GenPianoKeyPlaySoundTask(AudioList.NUM3);
-    public static CanExecuteTask Number4 = GenPianoKeyPlaySoundTask(AudioList.NUM4);
-    public static CanExecuteTask Number5 = GenPianoKeyPlaySoundTask(AudioList.NUM5);
-    public static CanExecuteTask Number6 = GenPianoKeyPlaySoundTask(AudioList.NUM6);
-    public static CanExecuteTask Number7 = GenPianoKeyPlaySoundTask(AudioList.NUM7);
-    public static CanExecuteTask Number8 = GenPianoKeyPlaySoundTask(AudioList.NUM8);
-    public static CanExecuteTask Number9 = GenPianoKeyPlaySoundTask(AudioList.NUM9);
+    public static IExecuteTask
+            Number1 = genTask(AudioList.NUM1),
+            Number2 = genTask(AudioList.NUM2),
+            Number3 = genTask(AudioList.NUM3),
+            Number4 = genTask(AudioList.NUM4),
+            Number5 = genTask(AudioList.NUM5),
+            Number6 = genTask(AudioList.NUM6),
+            Number7 = genTask(AudioList.NUM7),
+            Number8 = genTask(AudioList.NUM8),
+            Number9 = genTask(AudioList.NUM9);
 
-    public static CanExecuteTask Multiple = GenPianoKeyPlaySoundTask(AudioList.MUL);
-    public static CanExecuteTask Add = GenPianoKeyPlaySoundTask(AudioList.ADD);
-    public static CanExecuteTask Divide = GenPianoKeyPlaySoundTask(AudioList.DIV);
-    public static CanExecuteTask Minus = GenPianoKeyPlaySoundTask(AudioList.MINUS);
-    public static CanExecuteTask Equal = GenPianoKeyPlaySoundTask(AudioList.EQ);
+    public static IExecuteTask
+            Multiple = genTask(AudioList.MUL),
+            Add = genTask(AudioList.Plus),
+            Divide = genTask(AudioList.DIV),
+            Minus = genTask(AudioList.MINUS),
+            Equal = genTask(AudioList.EQ);
 }

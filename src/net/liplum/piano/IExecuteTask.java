@@ -1,6 +1,5 @@
 package net.liplum.piano;
 
-public interface CanExecuteTask {
+public interface IExecuteTask {
     void executeTask();
-
 }

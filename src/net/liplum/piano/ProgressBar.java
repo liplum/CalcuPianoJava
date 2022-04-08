@@ -1,16 +1,13 @@
 package net.liplum.piano;
 
-import net.liplum.attribute.MouseMotionListener;
+import net.liplum.attribute.IMouseMotion;
 import net.liplum.attribute.IRender;
 import net.liplum.attribute.IUpdate;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-/**
- * @author 普冷姆plum 进度条
- */
-public class ProgressBar implements IUpdate, IRender, MouseMotionListener {
+public class ProgressBar implements IUpdate, IRender, IMouseMotion {
 
     private volatile int shellX, shellY, shellWidth, shellHeight;
 
@@ -59,7 +56,6 @@ public class ProgressBar implements IUpdate, IRender, MouseMotionListener {
 
     }
 
-
     public void setInvisible() {
         this.isVisible = false;
     }
@@ -72,10 +68,6 @@ public class ProgressBar implements IUpdate, IRender, MouseMotionListener {
         return isVisible;
     }
 
-
-    /**
-     * @author 普冷姆plum 滑块
-     */
     private static class Bar implements IRender {
         volatile int x, y;
         int width, height;
@@ -83,13 +75,6 @@ public class ProgressBar implements IUpdate, IRender, MouseMotionListener {
 
         int minY, maxY;
 
-        /**
-         * @param initialX 默认位置的x
-         * @param initialY 默认位置的y
-         * @param width    Bar的宽度
-         * @param height   Bar的高度
-         * @param barColor bar的颜色
-         */
         public Bar(int initialX, int initialY, int width, int height, Color barColor) {
             this.x = initialX;
             this.y = initialY;
@@ -106,10 +91,10 @@ public class ProgressBar implements IUpdate, IRender, MouseMotionListener {
             g.fillRect(x, y, width, height);
         }
 
-        public void modifyY(int deltaY) {
+        public synchronized void modifyY(int deltaY) {
             y += deltaY;
-            y = y > maxY ? maxY : y;
-            y = y < minY ? minY : y;
+            y = Math.min(y, maxY);
+            y = Math.max(y, minY);
         }
     }
 
